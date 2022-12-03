@@ -1,0 +1,11 @@
+{
+  "name": "@hisorange/flow",
+  "version": "1.0.0",
+  "description": "No code execution engine",
+  "main": "build/index.js",
+  "repository": "https://github.com/hisorange/flow",
+  "author": "Zsolt Varga <hello@hisorange.me>",
+  "license": "GPL-3.0",
+  "private": false,
+  "type": "module"
+}
