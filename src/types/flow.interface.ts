@@ -1,5 +1,6 @@
 import { IEdge } from './edge.interface';
 import { IEngine } from './engine.interface';
+import { IHandle } from './handle.interface';
 import { INode } from './node.interface';
 
 export interface IFlow {
@@ -30,4 +31,6 @@ export interface IFlow {
       };
     }>,
   ): INode;
+
+  createEdge(from: IHandle, to: IHandle): IEdge;
 }

@@ -1,12 +1,20 @@
+import { Handle } from '../../../library/handle';
+import { AbstractNode } from '../../../library/nodes/abstract.node';
 import { IContext } from '../../../types/context.interface';
-import { INode } from '../../../types/node.interface';
 
-export class EqualNode implements INode {
+export class EqualNode extends AbstractNode {
   readonly id: 'equal';
 
+  constructor() {
+    super();
+
+    this.handles.input = [new Handle('left', this), new Handle('right', this)];
+    this.handles.output = [new Handle('result', this)];
+  }
+
   async invoke(ctx: IContext): Promise<void> {
-    let left = ctx.getInputEdge('left');
-    let right = ctx.getInputEdge('right');
+    let left = ctx.getInputHandle()[0];
+    let right = ctx.getInputHandle()[1];
 
     if (ctx.hasConfig('right')) {
       right = ctx.getConfig('right');

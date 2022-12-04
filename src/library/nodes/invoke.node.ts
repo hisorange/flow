@@ -1,10 +1,16 @@
 import { IContext } from '../../types/context.interface';
-import { INode } from '../../types/node.interface';
+import { Handle } from '../handle';
+import { AbstractNode } from './abstract.node';
 
-export class InvokeNode implements INode {
+export class InvokeNode extends AbstractNode {
   readonly id: 'invoke';
 
+  protected handles: AbstractNode['handles'] = {
+    input: [],
+    output: [new Handle('trigger', this)],
+  };
+
   async invoke(ctx: IContext): Promise<void> {
-    ctx.setOutput(ctx.readRegister('trigger'));
+    ctx.setOutput('trigger', ctx.readRegister('trigger'));
   }
 }

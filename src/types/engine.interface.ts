@@ -7,5 +7,5 @@ export interface IEngine {
   createNode(type: string, config?: any): INode;
 
   extend(extension: IExtension): void;
-  execute(flow: IFlow): Promise<void>;
+  invoke<R = unknown, I = unknown>(flow: IFlow, triggerInput: I): Promise<R>;
 }

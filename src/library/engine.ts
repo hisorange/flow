@@ -3,6 +3,7 @@ import { INode } from '../types';
 import { IEngine } from '../types/engine.interface';
 import { IExtension } from '../types/extension.interface';
 import { IFlow } from '../types/flow.interface';
+import { Context } from './context';
 import { Flow } from './flow';
 
 export class Engine implements IEngine {
@@ -34,5 +35,18 @@ export class Engine implements IEngine {
     this.extensions.set(extension.id, extension);
   }
 
-  async execute(flow: IFlow): Promise<void> {}
+  async invoke<R = unknown, I = unknown>(
+    flow: IFlow,
+    triggerInput: I,
+  ): Promise<R> {
+    const ctx = new Context();
+    ctx.setRegister('trigger', triggerInput);
+
+    const invokeNode = flow.getInvokeNode();
+    await invokeNode.invoke(ctx);
+
+    // Do the iterations and execution branches here
+
+    return ctx.readRegister('result');
+  }
 }

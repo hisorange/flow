@@ -20,12 +20,12 @@ describe('Logic Flow', () => {
     });
 
     flow.createEdge(
-      invokeNode.getOutputEdge('input'),
-      equalNode.getInputEdge('left'),
+      invokeNode.getOutputHandle()[0],
+      equalNode.getInputHandle()[0],
     );
     flow.createEdge(
-      equalNode.getOutputEdge('result'),
-      returnNode.getInputEdge('return'),
+      equalNode.getOutputHandle()[0],
+      returnNode.getInputHandle()[0],
     );
 
     const result_pass = await engine.invoke(flow.id, 1);
