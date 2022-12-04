@@ -5,6 +5,7 @@ import { IExtension } from '../types/extension.interface';
 import { IFlow } from '../types/flow.interface';
 import { Context } from './context';
 import { Flow } from './flow';
+import { Trace } from './trace';
 
 export class Engine implements IEngine {
   readonly extensions = new Map<string, IExtension>();
@@ -41,9 +42,14 @@ export class Engine implements IEngine {
   ): Promise<R> {
     const ctx = new Context();
     ctx.setRegister('trigger', triggerInput);
+    const branch = ctx.createBranch();
 
     const invokeNode = flow.getInvokeNode();
+    const startedAt = Date.now();
     await invokeNode.invoke(ctx);
+    const endedAt = Date.now();
+
+    branch.trace.push(new Trace(invokeNode, endedAt - startedAt));
 
     // Do the iterations and execution branches here
 

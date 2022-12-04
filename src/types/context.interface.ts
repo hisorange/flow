@@ -1,6 +1,13 @@
+import { IBranch } from './branch.interface';
 import { IHandle } from './handle.interface';
 
 export interface IContext {
+  readonly id: string;
+  readonly startedAt: number;
+  readonly branches: IBranch[];
+
+  createBranch(): IBranch;
+
   readRegister<R = unknown>(key: string): R;
   setRegister<V = any>(key: string, value: V): void;
 
