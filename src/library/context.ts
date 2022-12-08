@@ -1,25 +1,16 @@
 import { webcrypto } from 'crypto';
 import { IContext } from '../types';
-import { IBranch } from '../types/branch.interface';
 import { IHandle } from '../types/handle.interface';
-import { Branch } from './branch';
 
 export class Context implements IContext {
   readonly id: string;
-  readonly branches: IBranch[] = [];
   readonly startedAt: number = Date.now();
+  protected output: { [key: string]: any } = {};
 
   private readonly registers: Map<string, unknown> = new Map();
 
   constructor() {
     this.id = webcrypto.randomUUID();
-  }
-
-  createBranch(): IBranch {
-    const branch = new Branch();
-    this.branches.push(branch);
-
-    return branch;
   }
 
   readRegister<R = unknown>(key: string): R {
@@ -44,5 +35,7 @@ export class Context implements IContext {
     return undefined as R;
   }
 
-  setOutput<V = any>(key: string, value: V): void {}
+  setOutput<V = any>(key: string, value: V): void {
+    this.output[key] = value;
+  }
 }

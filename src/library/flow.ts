@@ -3,6 +3,7 @@ import { IEdge, INode } from '../types';
 import { IFlow } from '../types/flow.interface';
 import { IHandle } from '../types/handle.interface';
 import { Edge } from './edge';
+import { ErrorNode } from './nodes';
 import { InvokeNode } from './nodes/invoke.node';
 import { ReturnNode } from './nodes/return.node';
 
@@ -13,6 +14,7 @@ export class Flow implements IFlow {
   constructor(readonly id: string, readonly engine: IFlow['engine']) {
     this.nodes.invoke = new InvokeNode();
     this.nodes.return = new ReturnNode();
+    this.nodes.error = new ErrorNode();
   }
 
   createNode(

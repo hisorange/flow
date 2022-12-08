@@ -3,11 +3,11 @@ import { INode } from '../types';
 import { IEngine } from '../types/engine.interface';
 import { IExtension } from '../types/extension.interface';
 import { IFlow } from '../types/flow.interface';
-import { Context } from './context';
+import { Branch } from './branch';
 import { Flow } from './flow';
-import { Trace } from './trace';
 
 export class Engine implements IEngine {
+  protected readonly flows = new Map<string, IFlow>();
   readonly extensions = new Map<string, IExtension>();
 
   constructor() {}
@@ -19,6 +19,7 @@ export class Engine implements IEngine {
   createNode(type: string, config?: any): INode {
     const [extensionId, nodeId] = type.split('.');
     const extension = this.extensions.get(extensionId);
+
     if (!extension) {
       throw new Error(`Extension "${extensionId}" not found`);
     }
@@ -36,23 +37,28 @@ export class Engine implements IEngine {
     this.extensions.set(extension.id, extension);
   }
 
-  async invoke<R = unknown, I = unknown>(
-    flow: IFlow,
-    triggerInput: I,
-  ): Promise<R> {
-    const ctx = new Context();
-    ctx.setRegister('trigger', triggerInput);
-    const branch = ctx.createBranch();
+  register(flow: IFlow): void {
+    this.flows.set(flow.id, flow);
+  }
 
-    const invokeNode = flow.getInvokeNode();
-    const startedAt = Date.now();
-    await invokeNode.invoke(ctx);
-    const endedAt = Date.now();
+  async invoke<R = unknown, I = unknown>(flowId: string, input: I): Promise<R> {
+    const flow = this.flows.get(flowId);
+    const branch = new Branch(flow);
 
-    branch.trace.push(new Trace(invokeNode, endedAt - startedAt));
+    // Prepare the branch for the execution trigger
+    await branch.trigger(input);
 
-    // Do the iterations and execution branches here
+    // Print the trace
+    for (const step of branch.trace) {
+      console.log(
+        step.id,
+        step.node.id,
+        step.input,
+        step.output,
+        step.interval,
+      );
+    }
 
-    return ctx.readRegister('result');
+    return branch.context.readRegister('return');
   }
 }

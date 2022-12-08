@@ -3,7 +3,7 @@ import { AbstractNode } from '../../../library/nodes/abstract.node';
 import { IContext } from '../../../types/context.interface';
 
 export class EqualNode extends AbstractNode {
-  readonly id: 'equal';
+  readonly id = 'equal';
 
   constructor() {
     super();

@@ -28,6 +28,8 @@ describe('Logic Flow', () => {
       returnNode.getInputHandle()[0],
     );
 
+    engine.register(flow);
+
     const result_pass = await engine.invoke(flow.id, 1);
     const result_fail = await engine.invoke(flow.id, 2);
 

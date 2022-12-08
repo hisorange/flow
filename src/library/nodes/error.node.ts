@@ -2,15 +2,17 @@ import { IContext } from '../../types/context.interface';
 import { Handle } from '../handle';
 import { AbstractNode } from './abstract.node';
 
-export class InvokeNode extends AbstractNode {
-  readonly id = 'invoke';
+export class ErrorNode extends AbstractNode {
+  readonly id = 'error';
 
   protected handles: AbstractNode['handles'] = {
-    input: [],
-    output: [new Handle('trigger', this)],
+    input: [new Handle('err', this)],
+    output: [],
   };
 
   async invoke(ctx: IContext): Promise<void> {
-    ctx.setOutput('trigger', ctx.readRegister('trigger'));
+    const err = ctx.getInputHandle()[0];
+
+    throw err;
   }
 }
