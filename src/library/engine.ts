@@ -8,17 +8,20 @@ import { Flow } from './flow';
 
 export class Engine implements IEngine {
   protected readonly flows = new Map<string, IFlow>();
-  readonly extensions = new Map<string, IExtension>();
+  protected readonly _extensions = new Map<string, IExtension>();
 
   constructor() {}
 
   createFlow(): IFlow {
-    return new Flow(webcrypto.randomUUID(), this);
+    const flow = new Flow(webcrypto.randomUUID(), this);
+    this.flows.set(flow.id, flow);
+
+    return flow;
   }
 
   createNode(type: string, config?: any): INode {
     const [extensionId, nodeId] = type.split('.');
-    const extension = this.extensions.get(extensionId);
+    const extension = this._extensions.get(extensionId);
 
     if (!extension) {
       throw new Error(`Extension "${extensionId}" not found`);
@@ -33,15 +36,20 @@ export class Engine implements IEngine {
     return node;
   }
 
-  extend(extension: IExtension): void {
-    this.extensions.set(extension.id, extension);
+  addExtension(extension: IExtension): void {
+    this._extensions.set(extension.id, extension);
   }
 
-  register(flow: IFlow): void {
-    this.flows.set(flow.id, flow);
+  getExtensionIDs(): string[] {
+    return Array.from(this._extensions.keys());
   }
 
-  async invoke<R = unknown, I = unknown>(flowId: string, input: I): Promise<R> {
+  registerFlow(flow: IFlow): void {}
+
+  async invokeFlow<R = unknown, I = unknown>(
+    flowId: string,
+    input: I,
+  ): Promise<R> {
     const flow = this.flows.get(flowId);
     const branch = new Branch(flow);
 

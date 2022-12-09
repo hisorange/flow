@@ -4,9 +4,14 @@ import { INode } from './node.interface';
 
 export interface IEngine {
   createFlow(): IFlow;
+
   createNode(type: string, config?: any): INode;
 
-  extend(extension: IExtension): void;
-  register(flow: IFlow): void;
-  invoke<R = unknown, I = unknown>(flowId: string, triggerInput: I): Promise<R>;
+  getExtensionIDs(): string[];
+  addExtension(extension: IExtension): void;
+
+  invokeFlow<R = unknown, I = unknown>(
+    flowId: string,
+    triggerInput: I,
+  ): Promise<R>;
 }
