@@ -2,10 +2,10 @@ import { IContext } from './context.interface';
 import { IHandle } from './handle.interface';
 
 export interface INode {
-  readonly id: string;
+  readonly type: string;
 
-  getOutputHandle(): IHandle[];
-  getInputHandle(): IHandle[];
+  getOutputHandles(): IHandle[];
+  getInputHandles(): IHandle[];
 
   invoke(context: IContext): Promise<void>;
 }

@@ -2,7 +2,7 @@ import { IContext, INode } from '../../types';
 import { IHandle } from '../../types/handle.interface';
 
 export abstract class AbstractNode implements INode {
-  abstract readonly id: string;
+  abstract readonly type: string;
 
   protected handles: {
     input: IHandle[];
@@ -12,11 +12,11 @@ export abstract class AbstractNode implements INode {
     output: [],
   };
 
-  getOutputHandle(): IHandle[] {
+  getOutputHandles(): IHandle[] {
     return this.handles.output;
   }
 
-  getInputHandle(): IHandle[] {
+  getInputHandles(): IHandle[] {
     return this.handles.input;
   }
 

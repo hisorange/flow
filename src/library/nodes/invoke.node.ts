@@ -3,7 +3,7 @@ import { Handle } from '../handle';
 import { AbstractNode } from './abstract.node';
 
 export class InvokeNode extends AbstractNode {
-  readonly id = 'invoke';
+  readonly type = 'invoke';
 
   protected handles: AbstractNode['handles'] = {
     input: [],

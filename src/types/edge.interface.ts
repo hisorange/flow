@@ -1,8 +1,7 @@
-import { IHandle } from './handle.interface';
-
 export interface IEdge {
-  readonly id: string;
+  readonly sourceNodeId: string;
+  readonly sourceHandle: string;
 
-  from: IHandle;
-  to: IHandle;
+  readonly targetNodeId: string;
+  readonly targetHandle: string;
 }

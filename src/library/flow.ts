@@ -1,8 +1,6 @@
 import { webcrypto } from 'crypto';
 import { IEdge, INode } from '../types';
 import { IFlow } from '../types/flow.interface';
-import { IHandle } from '../types/handle.interface';
-import { Edge } from './edge';
 import { ErrorNode } from './nodes';
 import { InvokeNode } from './nodes/invoke.node';
 import { ReturnNode } from './nodes/return.node';
@@ -24,10 +22,9 @@ export class Flow implements IFlow {
       config: { [key: string]: any };
     }>,
   ): INode {
-    const id = webcrypto.randomUUID();
     const node = this.engine.createNode(type, config);
 
-    this.nodes[id] = node;
+    this.nodes[webcrypto.randomUUID()] = node;
 
     return node;
   }
@@ -40,11 +37,24 @@ export class Flow implements IFlow {
     return this.nodes.return;
   }
 
-  createEdge(from: IHandle, to: IHandle): IEdge {
-    const id = webcrypto.randomUUID();
-    const edge = new Edge(id, from, to);
+  getNodeById(id: string): INode {
+    return this.nodes[id];
+  }
 
-    this.edges[id] = edge;
+  createEdge(
+    sourceNodeId: string,
+    sourceHandle: string,
+    targetNodeId: string,
+    targetHandle: string,
+  ): IEdge {
+    const edge: IEdge = {
+      sourceNodeId,
+      sourceHandle,
+      targetNodeId,
+      targetHandle,
+    };
+
+    this.edges[webcrypto.randomUUID()] = edge;
 
     return edge;
   }

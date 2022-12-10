@@ -3,7 +3,7 @@ import { Handle } from '../handle';
 import { AbstractNode } from './abstract.node';
 
 export class ErrorNode extends AbstractNode {
-  readonly id = 'error';
+  readonly type = 'error';
 
   protected handles: AbstractNode['handles'] = {
     input: [new Handle('err', this)],

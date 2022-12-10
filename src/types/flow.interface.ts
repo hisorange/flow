@@ -1,6 +1,5 @@
 import { IEdge } from './edge.interface';
 import { IEngine } from './engine.interface';
-import { IHandle } from './handle.interface';
 import { INode } from './node.interface';
 
 export interface IFlow {
@@ -19,18 +18,19 @@ export interface IFlow {
 
   getInvokeNode(): INode;
   getReturnNode(): INode;
+  getNodeById(id: string): INode;
 
   createNode(
     id: string,
     config?: Partial<{
-      meta: {
-        [key: string]: any;
-      };
-      config: {
-        [key: string]: any;
-      };
+      [key: string]: any;
     }>,
   ): INode;
 
-  createEdge(from: IHandle, to: IHandle): IEdge;
+  createEdge(
+    sourceNodeId: string,
+    sourceNodeHandle: string,
+    targetNodeId: string,
+    targetNodeHandle: string,
+  ): IEdge;
 }
