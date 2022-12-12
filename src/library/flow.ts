@@ -2,16 +2,16 @@ import { webcrypto } from 'crypto';
 import { IEdge, INode } from '../types';
 import { IFlow } from '../types/flow.interface';
 import { ErrorNode } from './nodes';
-import { InvokeNode } from './nodes/invoke.node';
-import { ReturnNode } from './nodes/return.node';
+import { StartNode } from './nodes/start.node';
+import { TerminateNode } from './nodes/terminate.node';
 
 export class Flow implements IFlow {
   nodes: IFlow['nodes'] = {};
   edges: IFlow['edges'] = {};
 
   constructor(readonly id: string, readonly engine: IFlow['engine']) {
-    this.nodes.invoke = new InvokeNode();
-    this.nodes.return = new ReturnNode();
+    this.nodes.invoke = new StartNode();
+    this.nodes.return = new TerminateNode();
     this.nodes.error = new ErrorNode();
   }
 
@@ -29,11 +29,11 @@ export class Flow implements IFlow {
     return node;
   }
 
-  getInvokeNode(): INode {
+  getStartNode(): INode {
     return this.nodes.invoke;
   }
 
-  getReturnNode(): INode {
+  getTerminateNode(): INode {
     return this.nodes.return;
   }
 
@@ -57,5 +57,13 @@ export class Flow implements IFlow {
     this.edges[webcrypto.randomUUID()] = edge;
 
     return edge;
+  }
+
+  getEdgesByTarget(targetNodeId: string, targetHandle: string): IEdge[] {
+    return Object.values(this.edges).filter(
+      edge =>
+        edge.targetNodeId === targetNodeId &&
+        edge.targetHandle === targetHandle,
+    );
   }
 }

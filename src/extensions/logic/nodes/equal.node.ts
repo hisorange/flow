@@ -13,8 +13,8 @@ export class EqualNode extends AbstractNode {
   }
 
   async invoke(ctx: IContext): Promise<void> {
-    let left = ctx.getInputHandle()[0];
-    let right = ctx.getInputHandle()[1];
+    let left = ctx.getInput()[0];
+    let right = ctx.getInput()[1];
 
     if (ctx.hasConfig('right')) {
       right = ctx.getConfig('right');

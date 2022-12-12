@@ -4,17 +4,13 @@ import { INode } from './node.interface';
 import { ISerializedFlow } from './serialized/serialized-flow.interface';
 
 export interface IEngine {
-  createFlow(id?: string): IFlow;
-
+  create(id?: string): IFlow;
   createNode(type: string, config?: any): INode;
 
-  getExtensionIDs(): string[];
-  addExtension(extension: IExtension): void;
+  extensions(): string[];
+  extend(extension: IExtension): void;
 
-  unserializeFlow(serializedFlow: ISerializedFlow): IFlow;
-  serializeFlow(flow: IFlow): ISerializedFlow;
-  invokeFlow<R = unknown, I = unknown>(
-    flowId: string,
-    triggerInput: I,
-  ): Promise<R>;
+  unserialize(serializedFlow: ISerializedFlow): IFlow;
+  serialize(flow: IFlow): ISerializedFlow;
+  execute<I = unknown, O = unknown>(flowId: string, input: I): Promise<O>;
 }

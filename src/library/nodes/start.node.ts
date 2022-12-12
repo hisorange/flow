@@ -2,8 +2,8 @@ import { IContext } from '../../types/context.interface';
 import { Handle } from '../handle';
 import { AbstractNode } from './abstract.node';
 
-export class InvokeNode extends AbstractNode {
-  readonly type = 'invoke';
+export class StartNode extends AbstractNode {
+  readonly type = 'start';
 
   protected handles: AbstractNode['handles'] = {
     input: [],

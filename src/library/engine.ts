@@ -9,9 +9,9 @@ import { Flow } from './flow';
 
 export class Engine implements IEngine {
   protected readonly flows = new Map<string, IFlow>();
-  protected readonly extensions = new Map<string, IExtension>();
+  protected readonly _extensions = new Map<string, IExtension>();
 
-  createFlow(id?: string): IFlow {
+  create(id?: string): IFlow {
     const flow = new Flow(id ?? webcrypto.randomUUID(), this);
     this.flows.set(flow.id, flow);
 
@@ -20,7 +20,7 @@ export class Engine implements IEngine {
 
   createNode(type: string, config?: any): INode {
     const [extensionId, nodeId] = type.split('.');
-    const extension = this.extensions.get(extensionId);
+    const extension = this._extensions.get(extensionId);
 
     if (!extension) {
       throw new Error(`Extension "${extensionId}" not found`);
@@ -35,16 +35,16 @@ export class Engine implements IEngine {
     return node;
   }
 
-  addExtension(extension: IExtension): void {
-    this.extensions.set(extension.id, extension);
+  extend(extension: IExtension): void {
+    this._extensions.set(extension.id, extension);
   }
 
-  getExtensionIDs(): string[] {
-    return Array.from(this.extensions.keys());
+  extensions(): string[] {
+    return Array.from(this._extensions.keys());
   }
 
-  unserializeFlow(serializedFlow: ISerializedFlow): IFlow {
-    const flow = this.createFlow();
+  unserialize(serializedFlow: ISerializedFlow): IFlow {
+    const flow = this.create();
 
     for (const nodeId in serializedFlow.nodes) {
       flow.createNode(serializedFlow.nodes[nodeId].type, {
@@ -64,7 +64,7 @@ export class Engine implements IEngine {
     return flow;
   }
 
-  serializeFlow(flow: IFlow): ISerializedFlow {
+  serialize(flow: IFlow): ISerializedFlow {
     const serializedFlow: ISerializedFlow = {
       id: flow.id,
       nodes: {},
@@ -85,7 +85,7 @@ export class Engine implements IEngine {
     return serializedFlow;
   }
 
-  async invokeFlow<R = unknown, I = unknown>(
+  async execute<I = unknown, R = unknown>(
     flowId: string,
     input: I,
   ): Promise<R> {

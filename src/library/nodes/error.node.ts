@@ -11,7 +11,7 @@ export class ErrorNode extends AbstractNode {
   };
 
   async invoke(ctx: IContext): Promise<void> {
-    const err = ctx.getInputHandle()[0];
+    const err = ctx.getInput()[0];
 
     throw err;
   }

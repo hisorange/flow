@@ -4,9 +4,9 @@ import { Engine } from '../src/library/engine';
 describe.skip('Logic Flow', () => {
   test('should handle the "equal" condition', async () => {
     const engine = new Engine();
-    engine.addExtension(new LogicExtension());
+    engine.extend(new LogicExtension());
 
-    const flow = engine.createFlow();
+    const flow = engine.create();
 
     const invokeNode = flow.getInvokeNode();
     const returnNode = flow.getReturnNode();

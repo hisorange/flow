@@ -1,11 +1,11 @@
 import { webcrypto } from 'crypto';
 import { IContext } from '../types';
-import { IHandle } from '../types/handle.interface';
 
 export class Context implements IContext {
   readonly id: string;
   readonly startedAt: number = Date.now();
-  protected output: { [key: string]: any } = {};
+  protected _input: { [key: string]: any } = {};
+  protected _output: { [key: string]: any } = {};
 
   private readonly registers: Map<string, unknown> = new Map();
 
@@ -21,11 +21,44 @@ export class Context implements IContext {
     this.registers.set(key, value);
   }
 
-  getInputHandle(): IHandle[] {
-    return [];
+  setInput<V = any>(key: string, value: V): void {
+    this._input[key] = value;
   }
-  getOutputHandle(): IHandle[] {
-    return [];
+
+  getInput<I = unknown>(handleId: string): I {
+    if (!this.hasInput(handleId)) {
+      throw new Error(`Input with handleId ${handleId} does not exist`);
+    }
+
+    return this._input[handleId] as I;
+  }
+
+  hasInput(handleId: string): boolean {
+    return Object.keys(this._input).includes(handleId);
+  }
+
+  setOutput<V = any>(key: string, value: V): void {
+    this._output[key] = value;
+  }
+
+  clearInput(): void {
+    this._input = {};
+  }
+
+  getOutput<O = unknown>(handleId: string): O {
+    if (!this.hasOutput(handleId)) {
+      throw new Error(`Output with handleId ${handleId} does not exist`);
+    }
+
+    return this._output[handleId] as O;
+  }
+
+  hasOutput(handleId: string): boolean {
+    return Object.keys(this._output).includes(handleId);
+  }
+
+  clearOutput(): void {
+    this._output = {};
   }
 
   hasConfig(key: string): boolean {
@@ -33,9 +66,5 @@ export class Context implements IContext {
   }
   getConfig<R = unknown>(key: string): R {
     return undefined as R;
-  }
-
-  setOutput<V = any>(key: string, value: V): void {
-    this.output[key] = value;
   }
 }

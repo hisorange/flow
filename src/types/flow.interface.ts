@@ -16,8 +16,8 @@ export interface IFlow {
     [id: string]: IEdge;
   };
 
-  getInvokeNode(): INode;
-  getReturnNode(): INode;
+  getStartNode(): INode;
+  getTerminateNode(): INode;
   getNodeById(id: string): INode;
 
   createNode(
@@ -33,4 +33,6 @@ export interface IFlow {
     targetNodeId: string,
     targetNodeHandle: string,
   ): IEdge;
+
+  getEdgesByTarget(targetNodeId: string, targetNodeHandle: string): IEdge[];
 }
